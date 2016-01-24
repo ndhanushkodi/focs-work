@@ -6,7 +6,22 @@ Name: Nitya Dhanushkodi
 
 Email: nitya.dhanushkodi@students.olin.edu
 
-Remarks, if any:
+Remarks, if any: 
+
+The functions 
+let get_1st_tuple2 (a,_) = a
+let get_2nd_tuple2 (_,a) = a
+
+I found online when I was trying to figure out how to 
+get the nth element of a tuple. I figured they were short and
+easy enough that I understood them perfectly and could use them
+as helper functions for the separate function. I think I would 
+have ended up writing something just like that anyway.
+
+Also, Cynthia and I worked together by mostly working on our own,
+but every so often helping eachother debug, or discussing an
+approach to a problem if we were stuck.
+
 
 *)
 
@@ -49,7 +64,9 @@ let rec gcd (a,b) =
       if a>b then gcd(b,a mod b) else gcd(a,b mod a);;
       
 
-     
+   
+
+
 (*Two integers are coprime if they have 
 only the trivial divisor in common — that is, 
 if their greatest common divisor is 1.
@@ -73,6 +90,9 @@ let is_coprime (a,b) =
       then true
    else
       false;;
+
+
+
 
 
 (*The Euler φ function is defined by taking φ(n) 
@@ -105,6 +125,9 @@ let rec euler_helper (co_b, num_at, n) =
 
 let euler (n) = euler_helper(0,1, n)
    
+
+
+
 
 (*Code a function coprimes of type 
 int -> int list which returns the list 
@@ -158,6 +181,8 @@ let coprimes (n) =
 
 
 
+
+
 (* Question 2 *)
 
 (* Code a function append of type 
@@ -179,11 +204,6 @@ second list appended at the end of the first.
 - : string list = ["a"; "b"]
 
 *)
-let rec last_helper(ls) = 
-   match ls with [] -> None
-      |[x] -> Some x
-      | first::rest -> last_helper(rest)
-
 let rec reverse_helper(ls, build) = 
    match ls with [] -> build
    |first::rest -> reverse_helper(rest, first::build)
@@ -194,6 +214,8 @@ let rec append_helper (xs,ys) =
 
 let append (xs,ys)=
    append_helper(reverse_helper(xs, []), ys)
+
+
 
 
 
@@ -222,6 +244,10 @@ let rec flatten_helper (xss, build) =
 
 let flatten (xss) = 
    flatten_helper(reverse_helper(xss,[]),[])
+
+
+
+
 
 (*Code a function nth of type 
 int * 'a list -> 'a where nth(n,xs) returns 
@@ -256,37 +282,263 @@ let nth (n,xs) =
       |first::rest -> nth_helper(n,0,first,rest)
 
 
-let last (xs) = 
-   failwith "not implemented"
 
+
+
+
+(* Code a function last of 
+type 'a list -> 'a which returns the 
+last element of a list.
+
+If the list is empty, then there is no 
+last element. Use built-in function failwith 
+to return an error. (Function failwith takes a 
+string as input, the error message to report.)
+
+# last [];;
+Exception: Failure "empty list".
+# last [1];;
+- : int = 1
+# last [1;2];;
+- : int = 2
+# last [1;2;3;4;5;6;7;8];;
+- : int = 8
+# last ["a";"b";"c"];;
+- : string = "c"
+
+*)
+let rec last (xs) = 
+   match xs with [] -> failwith "empty list"
+      |[x] -> x
+      |first::rest -> last(rest)
+
+
+
+
+
+
+(*(Challenging) Code a function separate 
+of type ('a * 'b) list -> ('a list * 'b list) 
+which takes a list of pairs, and returns a pair 
+of lists (L1,L2), where L1 is the list of all 
+first components of the original pairs and L2 is 
+the list of all second components of the original pairs.
+
+# separate [];;
+- : 'a list * 'b list = ([], [])
+# separate [(1,2)];;
+- : int list * int list = ([1], [2])
+# separate [(1,2);(3,4)];;
+- : int list * int list = ([1; 3], [2; 4])
+# separate [(1,2);(3,4);(5,6)];;
+- : int list * int list = ([1; 3; 5], [2; 4; 6])
+# separate [(1,"a");(2,"b");(3,"c")];;
+- : int list * string list = ([1; 2; 3], ["a"; "b"; "c"])
+
+*)
+let get_1st_tuple2 (a,_) = a
+let get_2nd_tuple2 (_,a) = a
+
+let rec separate_helper (xs, build1, build2) = 
+   match xs with [] -> (build1,build2)
+      |first::rest -> separate_helper(rest, get_1st_tuple2(first)::build1, get_2nd_tuple2(first)::build2)
 
 let separate (xs) = 
-   failwith "not implemented"
+   separate_helper(reverse_helper(xs, []), [], [])
+
+
 
 
 
 (* Question 3 *)
 
-let setIn (e,xs) = 
-   failwith "not implemented"
+(* Code a function setIn of 
+type 'a * 'a list -> bool where 
+setIn (a,S) returns true if element a 
+is an element of set S, and false otherwise.
+
+# setIn (1,[]);;
+- : bool = false
+# setIn (1,[2;3]);;
+- : bool = false
+# setIn (1,[1;2;3]);;
+- : bool = true
+# setIn (1,[3;4;4;1;1;]);;
+- : bool = true
+# setIn ("a",["b";"a";"b"]);;
+- : bool = true
+
+*)
+let rec setIn (e,xs) = 
+   match xs with [] -> false
+      |first::rest -> if e=first then true else setIn(e,rest)
 
 
-let setSub (xs,ys) = 
-   failwith "not implemented"
 
 
+
+(*Recall that a set S is a subset of T 
+when every element of S is an element of T.
+
+Code a function setSub of 
+type 'a list * 'a list -> bool where 
+setSub (S,T) returns true if S is a 
+subset of T when S and T are interpreted 
+as sets, and false otherwise.
+
+# setSub ([],[]);;
+- : bool = true
+# setSub ([],[1;1;1]);;
+- : bool = true
+# setSub ([1],[1;1;1]);;
+- : bool = true
+# setSub ([1;1;],[1;1;1]);;
+- : bool = true
+# setSub ([1;1],[1;2;3]);;
+- : bool = true
+# setSub ([1;1;],[2;3]);;
+- : bool = false
+# setSub ([1],[]);;
+- : bool = false
+# setSub (["a"],["a";"b"]);;
+- : bool = true
+
+*)
+let rec setSub (xs,ys) = 
+   match xs with [] -> true
+      |first::rest -> if setIn(first,ys) then setSub(rest, ys) else false
+
+
+
+
+
+(* Code a function setEqual of 
+type 'a list * 'a list -> bool where 
+setEqual (S,T) returns true if S and T are 
+equal when interpreted as sets, and false otherwise.
+
+# setEqual ([],[]);;
+- : bool = true
+# setEqual ([1],[1]);;
+- : bool = true
+# setEqual ([1],[1;1;1]);;
+- : bool = true
+# setEqual ([1;1;1],[1;1]);;
+- : bool = true
+# setEqual ([1;2],[1;2;3]);;
+- : bool = false
+# setEqual ([1;2],[2;1]);;
+- : bool = true
+# setEqual ([1;1;2],[2;2;1]);;
+- : bool = true
+# setEqual (["a";"b"],["b";"a"]);;
+- : bool = true
+
+*)
 let setEqual (xs,ys) = 
-   failwith "not implemented"
+   if setSub(xs,ys) && setSub(ys,xs) then true else false
 
+
+
+
+(*Code a function setUnion 
+of type 'a list * 'a list -> 'a list 
+where setUnion (S,T) returns a list 
+representing the union of S and T interpreted 
+as sets.
+
+# setEqual (setUnion ([],[]), []);;
+- : bool = true
+# setEqual (setUnion ([],[1;1]), [1]);;
+- : bool = true
+# setEqual (setUnion ([1;1;1],[1;1]), [1]);;
+- : bool = true
+# setEqual (setUnion ([1;2],[]), [2;1]);;
+- : bool = true
+# setEqual (setUnion ([1;2;3],[4;5;6]), [1;2;3;4;5;6]);;
+- : bool = true
+# setEqual (setUnion ([1;2],[2;3;3]), [1;2;3]);;
+- : bool = true
+# setEqual (setUnion ([1;2],[2;1]), [1;2]);;
+- : bool = true
+# setEqual (setUnion ([1],[2]), [1]);;
+- : bool = false
+# setEqual (setUnion ([1],[2]), [2]);;
+- : bool = false
+# setEqual (setUnion (["a"],["b"]), ["a";"b"]);;
+- : bool = true
+
+*)
+let rec setUnion_helper (xs,ys,union_b) =
+   match xs with [] -> append(ys, union_b)
+      |first::rest -> if setIn(first, union_b) then setUnion_helper(rest, ys, union_b) else setUnion_helper(rest, ys, first::union_b)
 
 let setUnion (xs,ys) = 
-   failwith "not implemented"
+   setUnion_helper(xs,ys,[])
 
 
-let setInter (xs,ys) = 
-   failwith "not implemented"
 
+
+(*Code a function setInter of 
+type 'a list * 'a list -> 'a list 
+where setInter (S,T) returns a list 
+representing the intersection of S and T 
+interpreted as sets.
+
+# setEqual (setInter ([],[]), []);;
+- : bool = true
+# setEqual (setInter ([1;2],[1]), [1]);;
+- : bool = true
+# setEqual (setInter ([1;2],[2;3]), [2]);;
+- : bool = true
+# setEqual (setInter ([1;2;3],[3;3;2;2]), [2;3]);;
+- : bool = true
+# setEqual (setInter ([],[1;2;3]), []);;
+- : bool = true
+# setEqual (setInter ([1;2;3],[]), []);;
+- : bool = true
+# setEqual (setInter ([1;2],[2]), [1]);;
+- : bool = false
+# setEqual (setInter ([1;2],[2;3]), [1;3]);;
+- : bool = false
+# setEqual (setInter (["a";"b"],["c";"b"]), ["b"]);;
+- : bool = true
+
+*)
+let rec setInter_helper (xs,ys, inter) = 
+   match xs with [] -> inter
+      |first::rest -> if setIn(first,ys) then setInter_helper(rest,ys,first::inter) else setInter_helper(rest,ys,inter)
+
+let setInter (xs,ys) =
+   setInter_helper(xs,ys,[])
+
+
+
+
+(*Code a function setSize of 
+type 'a list -> int where setSize (S) 
+returns the number of elements in S when 
+interpreted as a set.
+
+# setSize [];;
+- : int = 0
+# setSize [1];;
+- : int = 1
+# setSize [1;2;3];;
+- : int = 3
+# setSize [1;1;1;2;2;2;3;3;3;4;4;4];;
+- : int = 4
+# setSize [1;2;3;2;1];;
+- : int = 3
+# setSize ["a";"a";"b"];;
+- : int = 2
+
+*)
+
+let rec setSize_helper (xs, count, build) = 
+   match xs with [] -> count
+      |first::rest -> if setIn(first, build) then setSize_helper(rest, count, build) else setSize_helper(rest, count+1, first::build)
 
 let setSize (xs) = 
-   failwith "not implemented"
+   setSize_helper(xs,0, [])
 
