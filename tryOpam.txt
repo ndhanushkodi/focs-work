@@ -1,0 +1,102 @@
+nushkodi@ndhanushkodi-Latitude-E6430:~$ opam install ocaml-top
+The following actions will be performed:
+  ∗  install ocamlbuild         0             [required by cmdliner]
+  ∗  install conf-gtksourceview 2             [required by ocaml-top]
+  ∗  install ocamlfind          1.5.6         [required by lablgtk, ocp-build]
+  ∗  install camlp4             4.02+system   [required by lablgtk, ocp-build]
+  ∗  install cmdliner           0.9.8         [required by ocp-indent, ocp-index]
+  ∗  install base-bytes         base          [required by re]
+  ∗  install ocp-build          1.99.9-beta   [required by ocaml-top]
+  ∗  install lablgtk            2.18.3        [required by ocaml-top]
+  ∗  install re                 1.5.0         [required by ocp-index]
+  ∗  install ocp-indent         1.5.2         [required by ocaml-top]
+  ∗  install ocp-index          1.1.4         [required by ocaml-top]
+       For ocp-browser, please also install package lambda-term
+  ∗  install ocaml-top          1.1.2      
+===== ∗  12 =====
+Do you want to continue ? [Y/n] Y
+
+=-=- Gathering sources =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[default] https://opam.ocaml.org/archives/cmdliner.0.9.8+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/ocamlfind.1.5.6+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/ocaml-top.1.1.2+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/lablgtk.2.18.3+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/ocp-indent.1.5.2+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/re.1.5.0+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/ocp-build.1.99.9-beta+opam.tar.gz downloaded
+[default] https://opam.ocaml.org/archives/ocp-index.1.1.4+opam.tar.gz downloaded
+
+=-=- Processing actions -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+∗  installed ocamlbuild.0
+∗  installed camlp4.4.02+system
+[ERROR] The compilation of conf-gtksourceview failed at "pkg-config
+        gtksourceview-2.0".
+∗  installed cmdliner.0.9.8
+∗  installed ocamlfind.1.5.6
+∗  installed base-bytes.base
+∗  installed ocp-build.1.99.9-beta
+∗  installed re.1.5.0
+∗  installed ocp-indent.1.5.2
+∗  installed ocp-index.1.1.4
+
+#=== ERROR while installing conf-gtksourceview.2 ==============================#
+# opam-version 1.2.2
+# os           linux
+# command      pkg-config gtksourceview-2.0
+# path         /home/ndhanushkodi/.opam/system/build/conf-gtksourceview.2
+# compiler     system (4.02.3)
+# exit-code    1
+# env-file     /home/ndhanushkodi/.opam/system/build/conf-gtksourceview.2/conf-gtksourceview-13270-d474c2.env
+# stdout-file  /home/ndhanushkodi/.opam/system/build/conf-gtksourceview.2/conf-gtksourceview-13270-d474c2.out
+# stderr-file  /home/ndhanushkodi/.opam/system/build/conf-gtksourceview.2/conf-gtksourceview-13270-d474c2.err
+
+
+
+=-=- Error report -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+The following actions were aborted
+  ∗  install lablgtk   2.18.3
+  ∗  install ocaml-top 1.1.2 
+The following actions failed
+  ∗  install conf-gtksourceview 2
+The following changes have been performed
+  ∗  install base-bytes base       
+  ∗  install camlp4     4.02+system
+  ∗  install cmdliner   0.9.8      
+  ∗  install ocamlbuild 0          
+  ∗  install ocamlfind  1.5.6      
+  ∗  install ocp-build  1.99.9-beta
+  ∗  install ocp-indent 1.5.2      
+  ∗  install ocp-index  1.1.4      
+  ∗  install re         1.5.0      
+
+=-=- ocp-indent.1.5.2 installed successfully =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=> This package requires additional configuration for use in editors. Install
+   package 'user-setup', or manually:
+
+   * for Emacs, add these lines to ~/.emacs:
+     (add-to-list 'load-path
+   "/home/ndhanushkodi/.opam/system/share/emacs/site-lisp")
+     (require 'ocp-indent)
+
+   * for Vim, add this line to ~/.vimrc:
+     set rtp^="/home/ndhanushkodi/.opam/system/share/ocp-indent/vim"
+
+=-=- ocp-index.1.1.4 installed successfully -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=> This package requires additional configuration for use in editors. Either
+   install package 'user-setup', or manually:
+
+   * for Emacs, add these lines to ~/.emacs:
+     (add-to-list 'load-path
+   "/home/ndhanushkodi/.opam/system/share/emacs/site-lisp")
+     (require 'ocp-index)
+
+   * for Vim, add the following line to ~/.vimrc:
+     set rtp+=/home/ndhanushkodi/.opam/system/share/ocp-index/vim
+
+=-=- conf-gtksourceview.2 troubleshooting -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+=> This package requires gtksourceview 2.0 development packages installed on
+   your system
+
+The former state can be restored with:
+    opam switch import "~/.opam/system/backup/state-20160023202144.export"
+
