@@ -1,0 +1,144 @@
+nushkodi@ndhanushkodi-Latitude-E6430:~$ opam install ocaml-top
+[ERROR] No OPAM root found at /home/ndhanushkodi/.opam.
+        Please run 'opam init' to initialize the state of OPAM, or specify
+        '--root'.
+        See 'opam init --help' for details.
+ndhanushkodi@ndhanushkodi-Latitude-E6430:~$ opam
+usage: opam [--version]
+            [--help]
+            <command> [<args>]
+
+The most commonly used opam commands are:
+    init         Initialize OPAM state.
+    list         Display the list of available packages.
+    show         Display information about specific packages.
+    install      Install a list of packages.
+    remove       Remove a list of packages.
+    update       Update the list of available packages.
+    upgrade      Upgrade the installed package to latest version.
+    config       Display configuration options for packages.
+    repository   Manage OPAM repositories.
+    switch       Manage multiple installation of compilers.
+    pin          Pin a given package to a specific version or source.
+
+See 'opam help <command>' for more information on a specific command.
+ndhanushkodi@ndhanushkodi-Latitude-E6430:~$ opam init
+Checking for available remotes: rsync and local, git, mercurial.
+  - you won't be able to use darcs repositories unless you install the darcs
+    command on your system.
+
+
+=-=- Fetching repository information =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[default] synchronized from https://opam.ocaml.org
+
+=-=- Gathering sources =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=- Processing actions -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+∗  installed base-bigarray.base
+∗  installed base-threads.base
+∗  installed base-unix.base
+Done.
+
+In normal operation, OPAM only alters files within ~/.opam.
+
+During this initialisation, you can allow OPAM to add information to two
+other files for best results. You can also make these additions manually
+if you wish.
+
+If you agree, OPAM will modify:
+
+  - ~/.bash_profile (or a file you specify) to set the right environment
+    variables and to load the auto-completion scripts for your shell (bash)
+    on startup. Specifically, it checks for and appends the following line:
+
+    . /home/ndhanushkodi/.opam/opam-init/init.sh > /dev/null 2> /dev/null ||
+true
+
+
+  - ~/.ocamlinit to ensure that non-system installations of `ocamlfind`
+    (i.e. those installed by OPAM) will work correctly when running the
+    OCaml toplevel. It does this by adding $OCAML_TOPLEVEL_PATH to the list
+    of include directories.
+
+If you choose to not configure your system now, you can either configure
+OPAM manually (instructions will be displayed) or launch the automatic setup
+later by running:
+
+   opam config setup -a
+
+
+Do you want OPAM to modify ~/.bash_profile and ~/.ocamlinit?
+(default is 'no', use 'f' to name a file other than ~/.bash_profile)
+    [N/y/f] f ~/.bashrc
+
+Global configuration:
+  Updating ~/.opam/opam-init/init.sh
+  Updating ~/.opam/opam-init/init.zsh
+  Updating ~/.opam/opam-init/init.csh
+  Updating ~/.opam/opam-init/init.fish
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+1. To configure OPAM in the current shell session, you need to run:
+
+      eval `opam config env`
+
+2. To correctly configure OPAM for subsequent use, add the following
+   line to your profile file (for instance ~/.bash_profile):
+
+      . /home/ndhanushkodi/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+3. To avoid issues related to non-system installations of `ocamlfind`
+   add the following lines to ~/.ocamlinit (create it if necessary):
+
+      let () =
+        try Topdirs.dir_directory (Sys.getenv "OCAML_TOPLEVEL_PATH")
+        with Not_found -> ()
+      ;;
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+ndhanushkodi@ndhanushkodi-Latitude-E6430:~$ opam init
+OPAM has already been initialized.
+In normal operation, OPAM only alters files within ~/.opam.
+
+During this initialisation, you can allow OPAM to add information to two
+other files for best results. You can also make these additions manually
+if you wish.
+
+If you agree, OPAM will modify:
+
+  - ~/.bash_profile (or a file you specify) to set the right environment
+    variables and to load the auto-completion scripts for your shell (bash)
+    on startup. Specifically, it checks for and appends the following line:
+
+    . /home/ndhanushkodi/.opam/opam-init/init.sh > /dev/null 2> /dev/null ||
+true
+
+
+  - ~/.ocamlinit to ensure that non-system installations of `ocamlfind`
+    (i.e. those installed by OPAM) will work correctly when running the
+    OCaml toplevel. It does this by adding $OCAML_TOPLEVEL_PATH to the list
+    of include directories.
+
+If you choose to not configure your system now, you can either configure
+OPAM manually (instructions will be displayed) or launch the automatic setup
+later by running:
+
+   opam config setup -a
+
+
+Do you want OPAM to modify ~/.bash_profile and ~/.ocamlinit?
+(default is 'no', use 'f' to name a file other than ~/.bash_profile)
+    [N/y/f] y
+
+User configuration:
+  Generating ~/.ocamlinit.
+  Updating ~/.bash_profile.
+Global configuration:
+  ~/.opam/opam-init/init.sh is already up-to-date.
+  ~/.opam/opam-init/init.zsh is already up-to-date.
+  ~/.opam/opam-init/init.csh is already up-to-date.
+  ~/.opam/opam-init/init.fish is already up-to-date.
+# To setup the new switch in the current shell, you need to run:
+eval `opam config env`
