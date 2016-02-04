@@ -542,3 +542,10 @@ let rec setSize_helper (xs, count, build) =
 let setSize (xs) = 
    setSize_helper(xs,0, [])
 
+
+(*without a helper*)
+let rec separate_noHelp(lst) = 
+   match lst with 
+   | [] -> ([],[])
+   | (a,b)::t -> (match separate(t) with
+                  |(l1,l2)->(a::l1,b::l2));;
