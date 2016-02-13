@@ -370,4 +370,5 @@ let regexp_c = "(b)*a(b)*"
 let regexp_d = "b*ab*(b*ab*ab*)*b*"
 (*"((b)*a(b)*) + (((b)*a(b)*)(b*ab*ab*)*) + ((b*ab*ab*)*((b)*a(b)*))"*)
 
-let regexp_e = "a*((b+a)(a)*)a*"
+let regexp_e = "(a+ba)*"
+(*"a*((ba)*(a)*)a*"*)
