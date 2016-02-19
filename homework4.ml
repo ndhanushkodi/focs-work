@@ -107,12 +107,10 @@ Note the type of the function. It should be a curried function,
 - : bool = false
 
 *)
-let rec setIn e xs = 
-   match xs with [] -> false
-      |first::rest -> if e=first then true else setIn e rest
+
 
 let isAccepting dfa s = 
-  setIn s dfa.accepting
+  List.fold_right (fun x ans -> x=s) dfa.accepting false
 
 
 
@@ -142,20 +140,15 @@ according to the symbols in l.
 - : string = "start"
 
 *)
-let rec findTransitions_helper (delta,q,a) = 
-  match delta with [] -> []
-    | (x,y,z)::rest -> if x=q & y=a then (x,y,z)::findTransitions_helper(rest,q,a) else findTransitions_helper(rest,q,a)
+(*val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
 
-let findTransitions (fa,q,a) = 
-  findTransitions_helper(fa.delta, q, a)
-
-let step (fa,q,a) = 
-  match findTransitions(fa,q,a) with [] -> failwith "no step"
-    |(x,y,z)::[] -> z
+List.fold_right f [a1; ...; an] b is f a1 (f a2 (... (f an b) ...)). Not tail-recursive.*)
 
 let steps dfa q syms = 
-  match syms with [] -> q
-    |first::rest -> steps fa step(fa,q,first) rest
+  List.fold_right (fun x ans-> dfa.delta ans x) syms q
+
+
+
 
 
 
@@ -191,7 +184,9 @@ correctly until you implement that.
 # acceptDFA dfaThreeA "abababa";;
 - : bool = false
 # langDFA dfaThreeA 6;;*)
-let acceptDFA dfa input = failwith "acceptDFA not implemented"
+
+let acceptDFA dfa input = 
+  isAccepting dfa (steps dfa dfa.start (explode input))
 
 
 
@@ -279,18 +274,138 @@ full points will be awarded if the function does not
 
 *)
 
-let at_least n p xs =  failwith "at_least not implemented"
-
-let max_positive xs =  failwith "max_positive not implemented"
-
-
-let map_funs fs x =  failwith "map_funs not implemented"
+let at_least n p xs =  
+  List.length(List.filter p xs) >= n 
 
 
-let map_cross fs xs =  failwith "map_cross not implemented"
+(*
+Code a function max_positive of type 
+int list -> int where max_positive xs 
+returns the maximum positive element in 
+list xs if one exists, and 0 otherwise.
+
+# max_positive [];;
+- : int = 0
+# max_positive [4];;
+- : int = 4
+# max_positive [4;5];;
+- : int = 5
+# max_positive [5;4];;
+- : int = 5
+# max_positive [4;6;5];;
+- : int = 6
+# max_positive [-1;-2;-3];;
+- : int = 0
+
+*)
+(*val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+
+List.fold_right f [a1; ...; an] b is f a1 (f a2 (... (f an b) ...)). Not tail-recursive.*)
+
+let max_positive xs =  
+  List.fold_right (fun x ma-> if x>ma & x>0 then x else ma) xs 0 
+
+(*
+
+Code a function map_funs of type 
+('a -> 'b) list -> 'a -> 'b list where 
+map_funs fs x returns the results of 
+applying every function in fs to x.
+
+# 
+val dbl : int -> string = 
+
+val neg : int -> string = 
+
+# map_funs [] 3;;
+- : 'a list = []
+# map_funs [dbl] 3;;
+- : string list = ["double of 3"]
+# map_funs [dbl;neg] 3;;
+- : string list = ["double of 3"; "negation of 3"]
+# map_funs [dbl;neg;dbl] 3;;
+- : string list = ["double of 3"; "negation of 3"; "double of 3"]
+# map_funs [(fun x -> x * 2); (fun x -> x * x)] 10;;
+- : int list = [20; 100]
+# map_funs [(fun x -> "+"^x); (fun x -> "-"^x)] "hello";;
+- : string list = ["+hello"; "-hello"]
+
+*)
+(*val map : ('a -> 'b) -> 'a list -> 'b list
+
+List.map f [a1; ...; an] applies function f to a1, ..., an, and 
+builds the list [f a1; ...; f an] with the results returned by f. Not tail-recursive.*)
+let dbl x = "double of "^(string_of_int x)
+let neg x = "negation of "^(string_of_int x)
+
+let map_funs fs x =  
+  List.map (fun f-> f x) fs 
 
 
-let all_pairings xs ys =  failwith "all_pairings not implemented"
+
+(*
+Code a function map_cross of type 
+('a -> 'b) list -> 'a list -> 'b list where
+ map_cross fs xs returns all the results of applying 
+ a function in fs to a value in xs.
+
+# let dbl x = "double of "^(string_of_int x);;
+val dbl : int -> string = 
+# let neg x = "negation of "^(string_of_int x);;
+val neg : int -> string = 
+
+# map_cross [] [];;
+- : 'a list = []
+# map_cross [] [1;2;3];;
+- : 'a list = []
+# map_cross [dbl; neg] [];;
+- : string list = []
+# map_cross [dbl] [3];;
+- : string list = ["double of 3"]
+# map_cross [dbl] [1;2;3];;
+- : string list = ["double of 1"; "double of 2"; "double of 3"]
+# map_cross [dbl;neg] [3];;
+- : string list = ["double of 3"; "negation of 3"]
+# map_cross [dbl;neg] [1;2;3];;
+- : string list =
+["double of 1"; "negation of 1"; "double of 2"; "negation of 2"; "double of 3"; "negation of 3"]
+# map_cross [(fun x -> "+"^x);(fun x -> "-"^x)] ["hello";"world"];;
+- : string list = ["+hello"; "-hello"; "+world"; "-world"]
+
+*)
+
+(*val fold_right : ('a -> 'b -> 'b) -> 'a list -> 'b -> 'b
+
+List.fold_right f [a1; ...; an] b is f a1 (f a2 (... (f an b) ...)). Not tail-recursive.*)
+let map_cross fs xs =  
+  List.fold_right (fun x acc-> (map_funs fs x)@acc) xs []
+
+
+
+(*
+
+Code a function all_pairings of type 
+'a list -> 'b list -> ('a * 'b) list where 
+all_pairings xs ys returns all the ways of pairing 
+up an element of xs with an element of ys.
+
+# all_pairings [] [];;
+- : ('a * 'b) list = []
+# all_pairings [1;2] [];;
+- : (int * 'a) list = []
+# all_pairings [] ["a";"b";"c"];;
+- : ('a * string) list = []
+# all_pairings [1] ["a";"b";"c"];;
+- : (int * string) list = [(1, "a"); (1, "b"); (1, "c")]
+# all_pairings [1;2] ["a"];;
+- : (int * string) list = [(1, "a"); (2, "a")]
+# all_pairings [1;2] ["a";"b";"c"];;
+- : (int * string) list =
+[(1, "a"); (1, "b"); (1, "c"); (2, "a"); (2, "b"); (2, "c")]
+
+*)
+let all_pairings xs ys =  
+  List.fold_right (fun x acc -> (List.map (fun y -> (x,y)) ys)@acc) xs []
 
 
 
@@ -298,8 +413,26 @@ let all_pairings xs ys =  failwith "all_pairings not implemented"
 
 (* QUESTION 3 *)
 
+(*
 
-let prefixes xs =  failwith "prefixes not implemented"
+Code a function prefixes of type 
+'a list -> 'a list list where prefixes xs 
+returns the list of all prefixes of xs: if xs 
+is [x1; x2; x3] then the prefixes of xs are [], [x1], [x1; x2], 
+and [x1; x2; x3]. (Note that the empty list is a prefix of every list.)
+
+# prefixes [];;
+- : 'a list list = [[]]
+# prefixes [1];;
+- : int list list = [[]; [1]]
+# prefixes [1;2;3;4];;
+- : int list list = [[]; [1]; [1; 2]; [1; 2; 3]; [1; 2; 3; 4]]
+# prefixes ["a";"b"];;
+- : string list list = [[]; ["a"]; ["a"; "b"]]
+
+*)
+let prefixes xs =  
+  List.fold_right (fun x acc -> acc::[x]) xs [[]]
 
 
 let suffixes xs =  failwith "suffixes not implemented"
