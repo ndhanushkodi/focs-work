@@ -432,14 +432,84 @@ and [x1; x2; x3]. (Note that the empty list is a prefix of every list.)
 
 *)
 let prefixes xs =  
-  List.fold_right (fun x acc -> acc::[x]) xs [[]]
+  List.fold_right (fun x acc -> ([]::(List.map (fun a-> (x::a)) acc))) xs [[]]
+
+(*
+Code a function suffixes of type 
+'a list -> 'a list list where suffixes xs returns
+ the list of all suffixes of xs: if xs is [x1; x2; x3] 
+ then the suffixes of xs are [x1; x2; x3], [x2; x3], [x3], 
+ and []. (Note that the empty list is a suffix of every list.)
+
+# suffixes [];;
+- : 'a list list = [[]]
+# suffixes [1];;
+- : int list list = [[1]; []]
+# suffixes [1;2;3;4];;
+- : int list list = [[1; 2; 3; 4]; [2; 3; 4]; [3; 4]; [4]; []]
+# suffixes ["a";"b";"c"];;
+- : string list list = [["a"; "b"; "c"]; ["b"; "c"]; ["c"]; []]
+
+*)
+let fst xs =
+  match xs with [] -> []
+  | first::rest -> first 
+
+let suffixes xs =  
+  List.fold_right (fun x acc -> (x::fst(acc))::acc) xs [[]]
 
 
-let suffixes xs =  failwith "suffixes not implemented"
+(*Code a function inject of type 
+'a -> 'a list -> 'a list list where inject a 
+xs returns all the ways in which value a can be 
+added to the list xs.
+
+# inject 99 [];;
+- : int list list = [[99]]
+# inject 99 [1];;
+- : int list list = [[99; 1]; [1; 99]]
+# inject 99 [1;2];;
+- : int list list = [[99; 1; 2]; [1; 99; 2]; [1; 2; 99]]
+# inject 99 [1;2;3;4];;
+- : int list list =
+[[99; 1; 2; 3; 4]; [1; 99; 2; 3; 4]; [1; 2; 99; 3; 4]; [1; 2; 3; 99; 4]; [1; 2; 3; 4; 99]]
+# inject "X" ["a";"b"];;
+- : string list list = [["X"; "a"; "b"]; ["a"; "X"; "b"]; ["a"; "b"; "X"]]
+*)
+let getRest xss = 
+  match fst xss with [] -> []
+  |first::rest -> rest
+
+let inject a xs =  
+  List.fold_right (fun x acc -> (a::x::getRest(acc))::(List.map (fun q-> x::q) acc)) xs [[a]] 
 
 
-let inject a xs =  failwith "inject not implemented"
+(*
 
+Code a function permutations of type 
+'a list -> 'a list list where permutations 
+xs returns the list of all permutations of xs. 
+(A permutation of a list is a list containing 
+the exact same elements, but in a different order, 
+q3treating repeated elements as distinct.)
 
-let permutations xs =  failwith "permutations not implemented"
+# permutations [];;
+- : 'a list list = [[]]
+# permutations [1];;
+- : int list list = [[1]]
+# permutations [1;2];;
+- : int list list = [[1; 2]; [2; 1]]
+# permutations [1;2;3;4];;
+- : int list list =
+[[1; 2; 3; 4]; [2; 1; 3; 4]; [2; 3; 1; 4]; [2; 3; 4; 1]; [1; 3; 2; 4];
+ [3; 1; 2; 4]; [3; 2; 1; 4]; [3; 2; 4; 1]; [1; 3; 4; 2]; [3; 1; 4; 2];
+ [3; 4; 1; 2]; [3; 4; 2; 1]; [1; 2; 4; 3]; [2; 1; 4; 3]; [2; 4; 1; 3];
+ [2; 4; 3; 1]; [1; 4; 2; 3]; [4; 1; 2; 3]; [4; 2; 1; 3]; [4; 2; 3; 1];
+ [1; 4; 3; 2]; [4; 1; 3; 2]; [4; 3; 1; 2]; [4; 3; 2; 1]]
+# permutations ["a";"b"];;
+- : string list list = [["a"; "b"]; ["b"; "a"]]
+
+*)
+let permutations xs =  
+  List.fold_right (fun x acc->     ( List.fold_right (fun l acc-> l@acc) (List.map (fun a-> inject x a) acc)  [])  ) xs [[]]
 
