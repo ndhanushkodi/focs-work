@@ -2,9 +2,9 @@
 
 HOMEWORK 4
 
-Name: 
+Name: Nitya Dhanushkodi 
 
-Email:
+Email: nitya.dhanushkodi@students.olin.edu 
 
 Remarks, if any:
 
@@ -147,7 +147,7 @@ List.fold_right f [a1; ...; an] b is f a1 (f a2 (... (f an b) ...)). Not tail-re
 let steps dfa q syms = 
   List.fold_right (fun x ans-> dfa.delta ans x) syms q
 
-
+(*have to use fold left or reverse the symbols list*)
 
 
 
