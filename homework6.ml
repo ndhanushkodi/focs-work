@@ -429,18 +429,121 @@ let add1 =
 
 
 (* QUESTION 3 *)
+let funcTwo = (fun (x,y) -> x^"|"^(y))
+  let funcT = (fun (x,y,z) -> x^"|"^(y)^"|"^(string_of_int z))
 
 
-let permutation = 
-  { states = ["x"];
-    input_alphabet = ["x"];
-    tape_alphabet = ["x"];
-    start = "x";
-    accept = "x";
-    reject = "x";
-    blank = "x";
-    left_marker = "x";
-    delta = (fun x -> ("x","x",0)) }
+let permutation_h = 
+  { states = [("s","-1");
+              ("getInp","-1");
+              ("rewind","-1");
+              ("finish","-1");
+              ("accept","-1");
+              ("reject","-1")] @
+              (pairs ["goRight"; "scanR"] ["-1";"a";"b";"c";"d";"e";"f";"g";"h";"i";"j";"k";"l";"m";"n";"o";"p";"q";"r";"s";"t";"u";"v";"w";"x";"y";"z"]);
+    input_alphabet = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j";"k";"l";"m";"n";"o";"p";"q";"r";"s";"t";"u";"v";"w";"x";"y";"z"];
+    tape_alphabet = [">";"_";"X";"#";"a";"b";"c";"d";"e";"f";"g";"h";"i";"j";"k";"l";"m";"n";"o";"p";"q";"r";"s";"t";"u";"v";"w";"x";"y";"z"];
+    start = ("s","-1");
+    accept = ("accept","-1");
+    reject = ("reject","-1");
+    blank = "_";
+    left_marker = ">";
+    delta = (fun x -> match x with
+    | (("s","-1"),">") -> (("getInp","-1"),">",1)
+    | (("s",_),sym) -> (("reject","-1"),sym,1)
+
+    | (("getInp","-1"),"#") -> (("finish","-1"),"#",1)
+    | (("getInp","-1"),"_") -> (("reject","-1"),"_",0)
+    | (("getInp","-1"),"X") -> (("getInp","-1"),"X",1)
+    | (("getInp","-1"),sym) -> (("goRight",sym),"X",1)
+
+    | (("goRight",read),"#") -> (("scanR",read),"#",1)
+    | (("goRight",read),"_") -> (("reject","-1"),"_",0)
+    | (("goRight",read),"X") -> (("goRight",read),"X",1)
+    | (("goRight",read),sym) -> (("goRight",read),sym,1)
+
+    | (("scanR",read),"X") -> (("scanR",read),"X",1)
+    | (("scanR",read),"_") -> (("reject","-1"),"_",0)
+    | (("scanR",read),"#") -> (("reject","-1"),"#",1)
+    | (("scanR",read),sym) -> if (sym=read) then (("rewind", "-1"), "X", 0)
+                                else (("scanR", read), sym, 1)
+
+    | (("rewind","-1"),">") -> (("getInp","-1"),">",1)
+    | (("rewind","-1"),"X") -> (("rewind","-1"),"X",0)
+    | (("rewind","-1"),"#") -> (("rewind","-1"),"#",0)
+    | (("rewind","-1"),sym) -> (("rewind","-1"),sym,0)
+
+    | (("finish","-1"),"X") -> (("finish","-1"),"X",1)
+    | (("finish","-1"),"#") -> (("reject","-1"),"#",1)
+    | (("finish","-1"),"_") -> (("accept","-1"),"_",1)
 
 
-let copies n = failwith "copies not implemented yet"
+    |((_,_),sym) -> (("reject","-1"),sym,1)
+
+
+
+
+
+  ) }
+
+let permutation = transform permutation_h funcTwo
+
+
+let copies_H n = 
+  if (n < 1) then failwith "n has to be greater than 0" else
+  {
+  states = [("s","-1",0);
+              ("getInp","-1", 0);
+              ("rewind","-1", 0);
+              ("accept","-1", 0);
+              ("reject","-1", 0 )] @
+              (triples ["verify";"ndec"; "nextH"] ["0";"1";"-1"] (range (n)));
+  input_alphabet = ["0";"1"; "#"];
+  tape_alphabet = [">";"X";"_";"0";"1";"#"];
+  start = ("s","-1",0);
+  accept = ("accept","-1",0);
+  reject = ("reject","-1",0);
+  blank = "_";
+  left_marker = ">";
+  delta = (fun x -> match x with
+    | (("s","-1", 0),">") -> (("getInp","-1",0),">",1)
+    | (("s",_,_),sym) -> (("reject","-1",0),sym,1)
+
+    | (("getInp","-1", 0),"#") -> (("verify","-1",0),"#",1)
+    | (("getInp","-1", 0),"X") -> (("getInp","-1",0),"X",1)
+    | (("getInp","-1", 0),"_") -> if (n=1) then (("accept", "-1", 0), "_",1) 
+                                  else (("reject", "-1", 0), "_", 1)
+    | (("getInp","-1", 0),sym) -> (("nextH",sym,1),"X",1)
+
+
+    | (("nextH",read,count),">") -> (("reject","-1",0),">",1)
+    | (("nextH",read,count),"#") -> (("ndec",read,count+1),"#",1)
+    | (("nextH",read,count),"X") -> (("nextH",read,count),"X",1)
+    | (("nextH",read,count),"_") -> if (count = n) then (("accept", "-1", 0), "_",0)
+                                      else (("reject", "-1", 0), "_", 1)
+    | (("nextH",read,count),sym) -> (("nextH",read,count),sym,1)
+
+    | (("ndec",read,count),">") -> (("reject","-1",0),">",1)
+    | (("ndec",read,count),"#") -> (("reject","-1",0),"#",1)
+    | (("ndec",read,count),"_") -> (("reject","-1",0),"_",1)
+    | (("ndec",read,count),"X") -> (("ndec",read,count),"X",1)
+    | (("ndec",read,count),sym) -> if (read<>sym) then (("reject","-1",0),sym,1)
+                                    else if(count<n) then (("ndec",read,count),"X",1)
+                                            else (("rewind","-1",0),"X",0)
+
+    | (("rewind","-1", 0),">") -> (("getInp","-1",0),">",1)
+    | (("rewind","-1", 0),"X") -> (("rewind","-1",0),"X",0)
+    | (("rewind","-1", 0),sym) -> (("rewind","-1",0),sym,0)
+
+    | (("verify","-1", count),"_") -> if(count = n) then (("accept", "-1",0),"_",0) else (("reject", "-1", 0), "_", 1)
+    | (("verify","-1", count),"X") -> (("verify","-1",count),"X",1)
+    | (("verify","-1", count),"#") -> (("verify","-1",count),"#",1)
+    | (("verify","-1", count),sym) -> (("reject","-1",0),sym,1)
+     | ((_,_,_),readChar) -> (("reject","-",-1),readChar,1)
+
+
+  )
+  }
+
+
+  let copies n = transform (copies_H n) funcT
