@@ -312,6 +312,7 @@ let geq = ("geq","/m./n. iszero (minus n m)")
 
 let eq = ("eq","/m./n.  (and (iszero(minus m n)) (iszero(minus n m)))")
 
+(*Sidd helped me think through pair*)
 let pair = ("pair","/x./y./f. f x y")
 
 let match_pair = ("match_pair","/p./f. p f")
@@ -350,6 +351,7 @@ let int = ("int","/n.(pair true n)")
 
 let neg_int = ("neg_int","/p.p (/x./y.(pair (not x) y))")
 
+(*I ran my logic by sidd and cynthia for plus.*)
 let plus_int = ("plus_int"," /m./n.(and (fst m) (fst n))    (pair true (plus (snd m) (snd n)))
 
   (
@@ -396,7 +398,12 @@ let plus_int = ("plus_int"," /m./n.(and (fst m) (fst n))    (pair true (plus (sn
 
   )   *)
 
-let times_int = ("times_int","not_implemented")
+let times_int = ("times_int","/m./n.(or (and (fst m) (fst n)) (and (not (fst m)) (not (fst n))))
+(pair true (times (snd m) (snd n)))
+  (
+    (pair false (times (snd m) (snd n)))
+  )")
+
 
 
 (* 
@@ -425,6 +432,7 @@ let empty = ("empty","/a./f.a")
 
 let cons = ("cons","/h./t./a./f.f h t")
 
+(*Sidd and Cynthia helped me talk through logic for match_list*)
 let match_list = ("match_list","/l./a./f.l a f")
 
 let length = ("length","Y (/length./l.match_list l _0 (/h./t.plus (_1) (length t)) )")
