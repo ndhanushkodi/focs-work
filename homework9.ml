@@ -6,7 +6,7 @@ Name: Nitya Dhanushkodi
 
 Email: nitya.dhanushkodi@students.olin.edu
 
-Remarks, if any:
+Remarks, if any: used a helper zip list function from online (cited below). 
 
 *)
 
@@ -190,8 +190,10 @@ let addf s1 s2 = map (fun (x,y) -> x+.y) (zip s1 s2)
 let minusf s1 s2 = map (fun (x,y) -> x-.y) (zip s1 s2)
 
 let rec psumsf s =
-  fby s (fun () -> addf (psumsf s) (drop s))  
+  fby s (fun () -> addf (psumsf s) (drop s)) 
 
+
+  (*Float streams for nats, evens, and odds*) 
 let natsfl =
   let rec natsF () = fby (cst 0.0)
                          (fun () -> (map (fun x -> x+.1.0) (natsF ()))) in
@@ -202,15 +204,18 @@ let oddsf = map (fun x -> x+.1.0) evensf
 
 let rec arctan z = psumsf (map (fun (n, d) -> ((-1.0)**((d-.1.0)/.2.0))*.((n**d)/.d) ) (zip (cst z) oddsf ))
 
-(* PLACEHOLDER -- REPLACE WITH YOUR OWN DEFINITION *)
 
 let pi = minusf (scalef 16.0 (arctan (1.0/.5.0))) (scalef 4.0 (arctan (1.0/.239.0)))
     
-let rec newton f df guess = failwith "not" (*fold!!*)
 
-let derivative f x = failwith "not implemented" (*x is x0*)
+let rec newton f df guess = fby (cst guess) (fun () -> map (fun x -> x-.(f x)/.(df x) ) (newton f df guess) )
 
-let limit epsilon s = failwith "not implemented"
+(*x is x0*) 
+let derivative f x = map (fun n -> ( f (x +. 1.0/.n) -. (f (x)) )/.(1.0/.n)) (drop natsfl)
+
+(*prefix 10 (filter (fun x y -> y>x) (cst 5) nats);;
+- : int list = [6; 7; 8; 9; 10; 11; 12; 13; 14; 15]    *)
+let limit epsilon s = filter (fun nxt cur -> (abs_float (nxt-.cur))<epsilon) (drop s) s
 
 
 (* 
@@ -238,7 +243,7 @@ let prefixes s = fold (fun s i -> i@[s]) (cst []) s
  ["a0"; "a1"; "a2"; "a3"; "a4"; "a5"; "a6"; "a7"; "a8"; "a9"]] *)
 
 
-(*From online, using zipL as a helper function
+(*I'm using zipL as a helper function, I found it online at
 https://www.matt-mcdonnell.com/code/code_ocaml/ocaml_fold/ocaml_fold.html
 *)
 let rec zipL lst1 lst2 = match lst1,lst2 with
@@ -254,16 +259,28 @@ let stripes s1 s2 = map (fun (l1, l2) -> zipL l1 l2) (zip (prefixes s1) (rev_pre
  (a3,b0)  (a3,b1)  (a3,b2)  (a3,b3)  ...
    ...      ...      ...      ... 
 
--> for stripe 1
-<- for stripe 2 *)
+-> direction for stripe 1
+<- direction for stripe 2 *)
 
 (*prefix 10 (filter (fun x y -> y>x) (cst 5) nats);;
 - : int list = [6; 7; 8; 9; 10; 11; 12; 13; 14; 15]    *)
-let popL lst s= 
-  match lst with [] -> flatten (drop s)
-  |h::t -> flatten (fby t (fun () -> (drop s)))
 
-let rec flatten ss = map (fun ls -> popL ls ss ) ss
+(*Helper functions for flatten*)
+let unempty l = 
+  match l with [] -> false
+  |h::t -> true
 
-let pairs s1 s2 =  failwith "not implemented"
-(*flatten stripes*)
+let filt_empty ss =
+  filter (fun x y -> unempty y ) ss ss
+
+let head_of_first ss =
+  map (fun (l1) -> List.hd l1) (first (filt_empty ss))
+
+let tail_of_first ss =
+  map (fun (l1) -> List.tl l1) (first (filt_empty ss)) 
+
+
+
+let rec flatten ss = fby (head_of_first ss) (fun () -> flatten (fby (tail_of_first ss) (fun () -> drop(filt_empty ss)) ))
+
+let pairs s1 s2 =  flatten (stripes s1 s2)
