@@ -107,13 +107,27 @@ let inorder t = fold (fun root left right -> (left@[root])@right ) t []
 let rec bst_insert t x = 
   match t with 
   | Empty -> Node(x, Empty, Empty)
-  | Node (n, lt, rt) -> Node(x, Empty, Empty) (***FIX***)
+  | Node (n, lt, rt) -> if x<n then (Node (n, (bst_insert lt x), rt)) else (Node (n,lt,(bst_insert rt x)))
 
 
-let rec bst_lookup t x = failwith ("bst_lookup not implemented")
+
+let rec bst_lookup t x = 
+  match t with
+  | Empty -> false
+  | Node (n, lt, rt) -> if x=n then true else (if x<n then (bst_lookup lt x) else (bst_lookup rt x))
 
 
-let rec bstify t =  failwith ("bstify not implemented")
+let rec bstify t = 
+  let list_nodes = preorder t in
+    List.fold_right (fun n acc -> bst_insert acc n) list_nodes Empty
+    
 
+(*   | Empty -> Empty
+  | Node (n, Node(ln, ll, lr), rt) ->  bst_insert (bstify lt) n
+  | Node (n, Empty, rt) *)
+  (*fold (fun root left right -> bst_insert (bst_insert root left) right ) t (bst_insert Empty n)*)
 
 let avl_insert t x = failwith ("avl_insert not implemented")
+
+
+(* Node n bstify lt bstify rt  *)
